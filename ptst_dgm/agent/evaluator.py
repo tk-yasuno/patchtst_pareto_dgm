@@ -30,6 +30,8 @@ class PatchTSTEvaluator:
         self.data_path = data_path
         self.output_dir = output_dir
         self.epochs = epochs
+        # Workspace root for cwd (2 levels up from this file)
+        self.workspace_root = Path(__file__).resolve().parents[3]
 
     def evaluate(
         self,
@@ -62,7 +64,7 @@ class PatchTSTEvaluator:
         print(f"[Evaluator] Running: focal_alpha={focal_alpha:.3f} gamma={focal_gamma:.3f} "
               f"w_normal={w_normal:.3f} w_anomal={w_anomal:.3f}")
 
-        result = subprocess.run(cmd, capture_output=False, text=True)
+        result = subprocess.run(cmd, capture_output=False, text=True, cwd=self.workspace_root)
         if result.returncode != 0:
             print(f"[Evaluator] Training failed (exit={result.returncode}), returning baseline-like zeros")
             return {k: 0.0 for k in OBJECTIVE_KEYS}
