@@ -79,6 +79,10 @@ class ParetoArchive:
         )
         return best[0], best[1], best[2]
 
+    def get_best_for_parent(self) -> Optional[Tuple[dict, dict, int]]:
+        """Get best solution from Pareto frontier for parent selection (by macro F1)."""
+        return self.get_best_by_macro_f1()
+
     def save(self, path: Path) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
         with open(path, "w", encoding="utf-8") as f:

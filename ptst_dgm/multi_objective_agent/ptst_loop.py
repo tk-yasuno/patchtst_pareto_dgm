@@ -20,7 +20,7 @@ WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
 if str(WORKSPACE_ROOT) not in sys.path:
     sys.path.insert(0, str(WORKSPACE_ROOT))
 
-from ptst_dgm.agent.archive import PatchTSTAgentEntry, PatchTSTArchive, HORIZONS
+from ptst_dgm.agent.archive import PatchTSTAgentEntry, PatchTSTArchive, HORIZONS, OBJECTIVE_KEYS
 from ptst_dgm.agent.evaluator import PatchTSTEvaluator
 from ptst_dgm.multi_objective_agent.ptst_agent import PatchTSTMultiObjectiveAgent
 from ptst_dgm.multi_objective_agent.pareto_archive import ParetoArchive
@@ -61,10 +61,37 @@ class PatchTSTDGMLoop:
             print("=" * 60)
             print(f"[Iter {t:02d}/{self.total_budget}]")
 
-            parent = self.archive.get_best()
-            print(f"[Parent] id={parent.id[:8]}  macro_F1={parent.macro_f1:.4f}  "
-                  f"α={parent.focal_alpha}  γ={parent.focal_gamma}  "
-                  f"w_n={parent.w_normal}  w_a={parent.w_anomal}")
+            # Select parent from Pareto frontier (or archive if empty)
+            pareto_parent = self.pareto.get_best_for_parent()
+            if pareto_parent:
+                params, objs, trial_num = pareto_parent
+                # Create a temporary entry for display
+                parent_macro_f1 = sum(objs[f"f1_{h}d"] for h in HORIZONS) / 3
+                print(f"[Parent] trial=#{trial_num}  macro_F1={parent_macro_f1:.4f}  "
+                      f"α={params['focal_alpha']:.3f}  γ={params['focal_gamma']:.3f}  "
+                      f"w_n={params['w_normal']:.3f}  w_a={params['w_anomal']:.3f}")
+                # Create PatchTSTAgentEntry for agent.generate()
+                parent = PatchTSTAgentEntry.create_child(
+                    parent_id=f"pareto_{trial_num}",
+                    coding_model=self.model_name,
+                    focal_alpha=params['focal_alpha'],
+                    focal_gamma=params['focal_gamma'],
+                    w_normal=params['w_normal'],
+                    w_anomal=params['w_anomal'],
+                    objectives=objs,
+                    rationale=f"Parent from Pareto frontier (trial #{trial_num})",
+                )
+            elif len(self.archive) > 0:
+                # Fallback to archive best if Pareto is empty but archive has entries
+                parent = self.archive.get_best()
+                print(f"[Parent] id={parent.id[:8]}  macro_F1={parent.macro_f1:.4f}  "
+                      f"α={parent.focal_alpha:.3f}  γ={parent.focal_gamma:.3f}  "
+                      f"w_n={parent.w_normal:.3f}  w_a={parent.w_anomal:.3f}")
+            else:
+                # First iteration with empty archive: use baseline parameters
+                print(f"[Parent] baseline (first iteration)")
+                baseline_objs = {k: 0.5 for k in OBJECTIVE_KEYS}
+                parent = PatchTSTAgentEntry.create_baseline(baseline_objs)
 
             proposal, trial_number = self.agent.generate(parent, max_retries=2)
 
