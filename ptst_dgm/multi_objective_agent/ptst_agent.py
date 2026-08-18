@@ -151,17 +151,27 @@ Output (JSON only, no other text):
         return True
 
     def _preload_model(self) -> None:
+        """Preload model into Ollama GPU memory before inference."""
+        print(f"[PatchTSTAgent] Loading {self.model_name} to GPU...")
         try:
-            requests.post(self.OLLAMA_API_URL,
-                          json={"model": self.model_name, "prompt": "", "stream": False},
-                          timeout=30)
-        except Exception:
-            pass
+            requests.post(
+                self.OLLAMA_API_URL,
+                json={"model": self.model_name, "prompt": "", "stream": False},
+                timeout=30,
+            )
+            print(f"[PatchTSTAgent] ✓ Model loaded")
+        except Exception as e:
+            print(f"[PatchTSTAgent] Preload warning: {e}")
 
     def _unload_model(self) -> None:
+        """Unload model from Ollama GPU memory after inference (free VRAM for training)."""
+        print(f"[PatchTSTAgent] Unloading {self.model_name} from GPU...")
         try:
-            requests.post(self.OLLAMA_API_URL,
-                          json={"model": self.model_name, "prompt": "", "keep_alive": 0},
-                          timeout=10)
-        except Exception:
-            pass
+            requests.post(
+                self.OLLAMA_API_URL,
+                json={"model": self.model_name, "prompt": "", "keep_alive": 0},
+                timeout=10,
+            )
+            print(f"[PatchTSTAgent] ✓ Model unloaded (VRAM freed for PatchTST training)")
+        except Exception as e:
+            print(f"[PatchTSTAgent] Unload warning: {e}")
