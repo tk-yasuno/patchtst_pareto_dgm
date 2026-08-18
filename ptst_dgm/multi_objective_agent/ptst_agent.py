@@ -43,10 +43,8 @@ class PatchTSTMultiObjectiveAgent:
         """Return (proposal_dict, trial_number). Always succeeds via NSGA-II fallback."""
         trial_number, nsgaii_params = self.sampler.suggest()
         print(f"[PatchTSTAgent] [TOOL: get_nsgaii_suggestion] trial=#{trial_number}  "
-              f"focal_alpha={nsgaii_params['focal_alpha']:.3f}  "
-              f"focal_gamma={nsgaii_params['focal_gamma']:.3f}  "
-              f"w_normal={nsgaii_params['w_normal']:.3f}  "
-              f"w_anomal={nsgaii_params['w_anomal']:.3f}")
+              f"patch_len={nsgaii_params['patch_len']}  "
+              f"stride={nsgaii_params['stride']}")
 
         self._preload_model()
         result = None
@@ -101,38 +99,45 @@ class PatchTSTMultiObjectiveAgent:
             for h in HORIZONS
         )
         return f"""You are an ML expert validating an Optuna NSGA-II suggestion for
-anomaly detection fine-tuning of a PatchTST time-series transformer.
+PatchTST architecture optimization (v0.3: patch_len/stride tuning).
 
 === TOOL CALL RESULT ===
 Tool: get_nsgaii_suggestion (NSGA-II Pareto 15-Objective Optimizer)
-Suggested parameters:
-  focal_alpha = {nsgaii['focal_alpha']:.4f}  (range 0.10–0.90)
-  focal_gamma = {nsgaii['focal_gamma']:.4f}  (range 0.50–5.00)
-  w_normal    = {nsgaii['w_normal']:.4f}  (range 0.10–5.00)
-  w_anomal    = {nsgaii['w_anomal']:.4f}  (range 0.50–10.00)
+Suggested architecture parameters:
+  patch_len = {nsgaii['patch_len']}  (range 8–32, integer)
+  stride    = {nsgaii['stride']}  (range 4–24, integer)
 ========================
+
+Context (90-day time series → 3 horizons):
+  - patch_len: Length of each patch extracted from time series
+    - Smaller (8-12): More granular features, more patches → higher model capacity but risk of overfitting
+    - Larger (24-32): More context per patch, fewer patches → lower capacity but more robust
+  - stride: Step size between consecutive patches
+    - Smaller (4-8): High overlap, redundant features → better local details but slower training
+    - Larger (16-24): Low overlap, less redundancy → faster training but may miss transitions
 
 Objectives: Maximize AUC/Precision/Recall/F1 × 3 horizons, Minimize FPR × 3 horizons.
 
 Current best parent (macro_F1={parent.macro_f1:.4f}):
-  focal_alpha={parent.focal_alpha}  focal_gamma={parent.focal_gamma}
-  w_normal={parent.w_normal}  w_anomal={parent.w_anomal}
+  patch_len={parent.patch_len}  stride={parent.stride}
 {parent_str}
 
+Focal Loss FIXED (v0.2 best): alpha=0.866, gamma=1.156, w_normal=1.851, w_anomal=4.035
+
 YOUR TASK:
-1. Evaluate if NSGA-II suggestion is physically reasonable for anomaly detection:
-   - Higher w_anomal (anomaly class weight) helps recall but may hurt precision
-   - Higher focal_gamma focuses on hard samples (good for rare anomalies)
-   - focal_alpha < 0.5 down-weights easy negatives
+1. Evaluate if NSGA-II suggestion is physically reasonable for time series patching:
+   - patch_len ≥ stride (required: no gaps between patches)
+   - stride ≤ patch_len/2 often optimal (50%+ overlap for smooth transitions)
+   - For 90-day sequences: ~90/stride patches generated
 2. Accept NSGA-II's Pareto suggestion if it looks reasonable
-3. Micro-correct (±0.05 max) only if clearly outside sensible range
+3. Micro-correct (±2 max) only if clearly outside sensible range (e.g., stride > patch_len)
 4. Trust NSGA-II — it explores Pareto trade-offs across all 15 objectives
 
 Output (JSON only, no other text):
-{{"focal_alpha":<float>,"focal_gamma":<float>,"w_normal":<float>,"w_anomal":<float>,"rationale":"<one sentence>"}}"""
+{{"patch_len":<int>,"stride":<int>,"rationale":"<one sentence>"}}"""
 
     def _parse_json(self, text: str) -> Optional[Dict]:
-        m = re.search(r'\{[^{}]*"focal_alpha"[^{}]*\}', text, re.DOTALL)
+        m = re.search(r'\{[^{}]*"patch_len"[^{}]*\}', text, re.DOTALL)
         if not m:
             return None
         try:
@@ -141,7 +146,7 @@ Output (JSON only, no other text):
             return None
 
     def _validate(self, cfg: Dict) -> bool:
-        required = {"focal_alpha", "focal_gamma", "w_normal", "w_anomal", "rationale"}
+        required = {"patch_len", "stride", "rationale"}
         if not required.issubset(cfg):
             return False
         for name, (lo, hi) in PARAM_BOUNDS.items():

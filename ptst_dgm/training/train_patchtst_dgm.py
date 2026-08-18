@@ -1,15 +1,15 @@
 """
 train_patchtst_dgm.py
-PatchTST DGM training script with Focal Loss + Class Weights.
+PatchTST DGM training script with Architecture Optimization (v0.3).
 
+Fixed (v0.2 best): focal_alpha=0.866, focal_gamma=1.156, w_normal=1.851, w_anomal=4.035
 Fixed: LoRA r=16, alpha=32
-Control variables: --focal-alpha, --focal-gamma, --w-normal, --w-anomal
+Control variables (v0.3): --patch-len, --stride
 Output: JSON with 15 metrics (AUC/Precision/Recall/F1/FPR x 30d/60d/90d)
 
 Usage:
     python ptst_dgm/training/train_patchtst_dgm.py \
-        --focal-alpha 0.5 --focal-gamma 2.0 \
-        --w-normal 1.0 --w-anomal 3.0 \
+        --patch-len 16 --stride 8 \
         --output-json ptst_dgm/results/eval.json
 """
 from __future__ import annotations
@@ -43,6 +43,12 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 HORIZONS = [30, 60, 90]
 LORA_R = 16
 LORA_ALPHA = 32
+
+# v0.3: Fixed Focal Loss parameters (v0.2 best solution - Trial #381)
+FOCAL_ALPHA = 0.866
+FOCAL_GAMMA = 1.156
+W_NORMAL = 1.851
+W_ANOMAL = 4.035
 
 
 class WeightedFocalLoss(nn.Module):
@@ -171,10 +177,10 @@ def _compute_all_metrics(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--focal-alpha", type=float, default=0.5)
-    parser.add_argument("--focal-gamma", type=float, default=1.0)
-    parser.add_argument("--w-normal",    type=float, default=1.0)
-    parser.add_argument("--w-anomal",    type=float, default=1.0)
+    # v0.3: Architecture parameters as control variables
+    parser.add_argument("--patch-len",   type=int,   default=16)
+    parser.add_argument("--stride",      type=int,   default=8)
+    # v0.3: Focal Loss parameters fixed (v0.2 best - no longer command-line args)
     parser.add_argument("--epochs",      type=int,   default=100)
     parser.add_argument("--patience",    type=int,   default=20)
     parser.add_argument("--batch-size",  type=int,   default=64)
@@ -186,8 +192,8 @@ def main() -> None:
     parser.add_argument("--output-json", type=Path, required=False)
     args = parser.parse_args()
 
-    print(f"[Train] focal_alpha={args.focal_alpha}  focal_gamma={args.focal_gamma}  "
-          f"w_normal={args.w_normal}  w_anomal={args.w_anomal}")
+    print(f"[Train] patch_len={args.patch_len}  stride={args.stride}")
+    print(f"[Train] Focal Loss: alpha={FOCAL_ALPHA}  gamma={FOCAL_GAMMA}  w_normal={W_NORMAL}  w_anomal={W_ANOMAL} (FIXED)")
     print(f"[Train] LoRA r={LORA_R}, alpha={LORA_ALPHA}  epochs={args.epochs}  device={DEVICE}")
 
     # ── Data ──────────────────────────────────────────────────────────────
@@ -209,15 +215,20 @@ def main() -> None:
 
     # ── Model ─────────────────────────────────────────────────────────────
     lora_params = LoRAParams(r=LORA_R, lora_alpha=LORA_ALPHA, lora_dropout=0.05, bias="none")
-    base = build_patch_tst(lora_params=lora_params)
+    base = build_patch_tst(
+        context_len=90,
+        patch_len=args.patch_len,
+        stride=args.stride,
+        lora_params=lora_params
+    )
     model = PatchTSTWrapper(base, dropout=0.1).to(DEVICE)
 
     # ── Loss / Optimizer ──────────────────────────────────────────────────
     criterion = WeightedFocalLoss(
-        focal_alpha=args.focal_alpha,
-        focal_gamma=args.focal_gamma,
-        w_normal=args.w_normal,
-        w_anomal=args.w_anomal,
+        focal_alpha=FOCAL_ALPHA,
+        focal_gamma=FOCAL_GAMMA,
+        w_normal=W_NORMAL,
+        w_anomal=W_ANOMAL,
     )
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(

@@ -2,11 +2,12 @@
 ptst_sampler.py
 NSGA-II multi-objective sampler for PatchTST DGM.
 
-4 control variables (v0.2 - refined ranges based on 50-iter insights):
-  focal_alpha  [0.75, 0.90]  ← High confidence focus (best performers)
-  focal_gamma  [1.00, 2.00]  ← Moderate hard example focus (optimal range)
-  w_normal     [1.50, 2.50]  ← Balanced normal weight (2:4 ratio)
-  w_anomal     [3.50, 5.00]  ← Moderate anomaly emphasis (avoids extremes)
+2 control variables (v0.3 - architecture optimization):
+  patch_len    [8, 32]   ← Patch length for time series segmentation
+  stride       [4, 24]   ← Stride between patches (overlap control)
+
+Fixed (v0.2 best): focal_alpha=0.866, gamma=1.156, w_normal=1.851, w_anomal=4.035
+Fixed: LoRA r=16, alpha=32
 
 15 objectives (5 metrics × 3 horizons):
   Maximize: auc×3, precision×3, recall×3, f1×3
@@ -27,13 +28,12 @@ _OBJ_KEYS = (
 )
 _DIRECTIONS = ["maximize"] * 12 + ["minimize"] * 3
 
-# v0.2: Refined parameter bounds based on 50-iteration experiment insights
-# Key discoveries: High alpha (0.8+) + Low gamma (1.0-1.5) + Balanced weights (1.5:4.0)
+# v0.3: Architecture parameters as control variables
+# patch_len: Smaller → more granular, larger → more context per patch
+# stride: Smaller → more overlap, larger → less redundancy
 PARAM_BOUNDS = {
-    "focal_alpha": (0.75, 0.90),  # v0.1: (0.10, 0.90)
-    "focal_gamma": (1.00, 2.00),  # v0.1: (0.50, 5.00)
-    "w_normal":    (1.50, 2.50),  # v0.1: (0.10, 5.00)
-    "w_anomal":    (3.50, 5.00),  # v0.1: (0.50, 10.0)
+    "patch_len": (8, 32),   # v0.2: Fixed at 30 (v4-1-3_tst default)
+    "stride":    (4, 24),   # v0.2: Fixed at 30
 }
 
 
@@ -56,11 +56,11 @@ class PatchTSTSampler:
         )
         self._pending: dict[int, optuna.trial.Trial] = {}
 
-    def suggest(self) -> Tuple[int, Dict[str, float]]:
-        """Ask NSGA-II for next parameter configuration."""
+    def suggest(self) -> Tuple[int, Dict[str, int]]:
+        """Ask NSGA-II for next architecture parameter configuration."""
         trial = self.study.ask()
         params = {
-            name: trial.suggest_float(name, lo, hi)
+            name: trial.suggest_int(name, lo, hi)
             for name, (lo, hi) in PARAM_BOUNDS.items()
         }
         self._pending[trial.number] = trial

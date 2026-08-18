@@ -68,16 +68,13 @@ class PatchTSTDGMLoop:
                 # Create a temporary entry for display
                 parent_macro_f1 = sum(objs[f"f1_{h}d"] for h in HORIZONS) / 3
                 print(f"[Parent] trial=#{trial_num}  macro_F1={parent_macro_f1:.4f}  "
-                      f"α={params['focal_alpha']:.3f}  γ={params['focal_gamma']:.3f}  "
-                      f"w_n={params['w_normal']:.3f}  w_a={params['w_anomal']:.3f}")
+                      f"patch_len={params['patch_len']}  stride={params['stride']}")
                 # Create PatchTSTAgentEntry for agent.generate()
                 parent = PatchTSTAgentEntry.create_child(
                     parent_id=f"pareto_{trial_num}",
                     coding_model=self.model_name,
-                    focal_alpha=params['focal_alpha'],
-                    focal_gamma=params['focal_gamma'],
-                    w_normal=params['w_normal'],
-                    w_anomal=params['w_anomal'],
+                    patch_len=params['patch_len'],
+                    stride=params['stride'],
                     objectives=objs,
                     rationale=f"Parent from Pareto frontier (trial #{trial_num})",
                 )
@@ -85,8 +82,7 @@ class PatchTSTDGMLoop:
                 # Fallback to archive best if Pareto is empty but archive has entries
                 parent = self.archive.get_best()
                 print(f"[Parent] id={parent.id[:8]}  macro_F1={parent.macro_f1:.4f}  "
-                      f"α={parent.focal_alpha:.3f}  γ={parent.focal_gamma:.3f}  "
-                      f"w_n={parent.w_normal:.3f}  w_a={parent.w_anomal:.3f}")
+                      f"patch_len={parent.patch_len}  stride={parent.stride}")
             else:
                 # First iteration with empty archive: use baseline parameters
                 print(f"[Parent] baseline (first iteration)")
@@ -95,14 +91,11 @@ class PatchTSTDGMLoop:
 
             proposal, trial_number = self.agent.generate(parent, max_retries=2)
 
-            fa  = proposal["focal_alpha"]
-            fg  = proposal["focal_gamma"]
-            wn  = proposal["w_normal"]
-            wa  = proposal["w_anomal"]
-            rat = proposal.get("rationale", "")
+            patch_len = proposal["patch_len"]
+            stride    = proposal["stride"]
+            rat       = proposal.get("rationale", "")
 
-            print(f"[Proposal] focal_alpha={fa:.3f}  focal_gamma={fg:.3f}  "
-                  f"w_normal={wn:.3f}  w_anomal={wa:.3f}")
+            print(f"[Proposal] patch_len={patch_len}  stride={stride}")
 
             if dry_run:
                 import random
@@ -114,12 +107,12 @@ class PatchTSTDGMLoop:
                 objectives.update({f"f1_{h}d":        0.65 + random.random() * 0.20 for h in HORIZONS})
                 objectives.update({f"fpr_{h}d":       0.01 + random.random() * 0.05 for h in HORIZONS})
             else:
-                objectives = self.evaluator.evaluate(fa, fg, wn, wa)
+                objectives = self.evaluator.evaluate(patch_len, stride)
 
             self.agent.tell_result(trial_number, objectives)
 
             is_pareto = self.pareto.add(
-                {"focal_alpha": fa, "focal_gamma": fg, "w_normal": wn, "w_anomal": wa},
+                {"patch_len": patch_len, "stride": stride},
                 objectives,
                 trial_number,
             )
@@ -133,8 +126,8 @@ class PatchTSTDGMLoop:
                 entry = PatchTSTAgentEntry.create_child(
                     parent_id=parent.id,
                     coding_model=self.model_name,
-                    focal_alpha=fa, focal_gamma=fg,
-                    w_normal=wn, w_anomal=wa,
+                    patch_len=patch_len,
+                    stride=stride,
                     objectives=objectives,
                     rationale=rat,
                 )
@@ -142,7 +135,7 @@ class PatchTSTDGMLoop:
             else:
                 print(f"[Reject] Dominated by existing solutions")
 
-            self._log(t, trial_number, parent.id, fa, fg, wn, wa,
+            self._log(t, trial_number, parent.id, patch_len, stride,
                       objectives, macro_f1, mean_fpr, is_pareto, rat)
             print()
 
@@ -170,7 +163,7 @@ class PatchTSTDGMLoop:
 
     def _log(
         self, iteration, trial_number, parent_id,
-        fa, fg, wn, wa,
+        patch_len, stride,
         objectives, macro_f1, mean_fpr,
         is_pareto, rationale,
     ) -> None:
@@ -178,7 +171,7 @@ class PatchTSTDGMLoop:
             "iteration": iteration,
             "trial_number": trial_number,
             "parent_id": parent_id,
-            "params": {"focal_alpha": fa, "focal_gamma": fg, "w_normal": wn, "w_anomal": wa},
+            "params": {"patch_len": patch_len, "stride": stride},
             "objectives": objectives,
             "macro_f1": macro_f1,
             "mean_fpr": mean_fpr,

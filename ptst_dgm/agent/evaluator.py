@@ -1,9 +1,11 @@
 """
 evaluator.py
-Subprocess-based evaluator for PatchTST DGM.
+Subprocess-based evaluator for PatchTST DGM (v0.3).
 
-Calls train_patchtst_dgm.py in .venv-ptstf and parses the
-output JSON to return 15 objective values.
+Calls train_patchtst_dgm.py in .venv-ptstf with architecture parameters
+(patch_len, stride) and parses the output JSON to return 15 objective values.
+
+Focal Loss parameters fixed (v0.2 best): alpha=0.866, gamma=1.156, w_n=1.851, w_a=4.035
 """
 from __future__ import annotations
 
@@ -35,12 +37,10 @@ class PatchTSTEvaluator:
 
     def evaluate(
         self,
-        focal_alpha: float,
-        focal_gamma: float,
-        w_normal: float,
-        w_anomal: float,
+        patch_len: int,
+        stride: int,
     ) -> Dict[str, float]:
-        """Train PatchTST with given params and return 15 objective values."""
+        """Train PatchTST with given architecture params and return 15 objective values."""
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
         with tempfile.NamedTemporaryFile(
@@ -51,18 +51,15 @@ class PatchTSTEvaluator:
         cmd = [
             str(self.python_exe),
             str(self.script_path),
-            "--focal-alpha", str(focal_alpha),
-            "--focal-gamma", str(focal_gamma),
-            "--w-normal", str(w_normal),
-            "--w-anomal", str(w_anomal),
+            "--patch-len", str(patch_len),
+            "--stride", str(stride),
             "--epochs", str(self.epochs),
             "--data-path", str(self.data_path),
             "--output-dir", str(self.output_dir),
             "--output-json", str(json_path),
         ]
 
-        print(f"[Evaluator] Running: focal_alpha={focal_alpha:.3f} gamma={focal_gamma:.3f} "
-              f"w_normal={w_normal:.3f} w_anomal={w_anomal:.3f}")
+        print(f"[Evaluator] Running: patch_len={patch_len}  stride={stride}")
 
         result = subprocess.run(cmd, capture_output=False, text=True, cwd=self.workspace_root)
         if result.returncode != 0:
