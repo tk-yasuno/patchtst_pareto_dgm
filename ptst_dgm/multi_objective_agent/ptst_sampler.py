@@ -2,11 +2,11 @@
 ptst_sampler.py
 NSGA-II multi-objective sampler for PatchTST DGM.
 
-4 control variables:
-  focal_alpha  [0.10, 0.90]
-  focal_gamma  [0.50, 5.00]
-  w_normal     [0.10, 5.00]
-  w_anomal     [0.50, 10.0]
+4 control variables (v0.2 - refined ranges based on 50-iter insights):
+  focal_alpha  [0.75, 0.90]  ← High confidence focus (best performers)
+  focal_gamma  [1.00, 2.00]  ← Moderate hard example focus (optimal range)
+  w_normal     [1.50, 2.50]  ← Balanced normal weight (2:4 ratio)
+  w_anomal     [3.50, 5.00]  ← Moderate anomaly emphasis (avoids extremes)
 
 15 objectives (5 metrics × 3 horizons):
   Maximize: auc×3, precision×3, recall×3, f1×3
@@ -27,11 +27,13 @@ _OBJ_KEYS = (
 )
 _DIRECTIONS = ["maximize"] * 12 + ["minimize"] * 3
 
+# v0.2: Refined parameter bounds based on 50-iteration experiment insights
+# Key discoveries: High alpha (0.8+) + Low gamma (1.0-1.5) + Balanced weights (1.5:4.0)
 PARAM_BOUNDS = {
-    "focal_alpha": (0.10, 0.90),
-    "focal_gamma": (0.50, 5.00),
-    "w_normal":    (0.10, 5.00),
-    "w_anomal":    (0.50, 10.0),
+    "focal_alpha": (0.75, 0.90),  # v0.1: (0.10, 0.90)
+    "focal_gamma": (1.00, 2.00),  # v0.1: (0.50, 5.00)
+    "w_normal":    (1.50, 2.50),  # v0.1: (0.10, 5.00)
+    "w_anomal":    (3.50, 5.00),  # v0.1: (0.50, 10.0)
 }
 
 
