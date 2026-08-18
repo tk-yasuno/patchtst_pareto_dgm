@@ -1,0 +1,88 @@
+# Virtual Environments
+.venv-codagt/
+.venv-ptstf/
+venv/
+env/
+*.pyc
+__pycache__/
+
+# Python
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Data Files (exclude large raw data)
+data/data_source/*.csv
+data/full_dataset/
+data/processed/*.npz
+data/processed/text_embeddings/
+*.parquet
+
+# Results and Experiments
+ptst_dgm/results/*.jsonl
+ptst_dgm/results/*.json
+ptst_dgm/results/visualizations_*/
+dgm_exp/results/
+
+# Checkpoints and Models
+0_LogBAK/v4-1-3_tst/checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.bin
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Windows
+desktop.ini
+*.lnk
+
+# Paper outputs (keep source only)
+paper_patchtst_dgm/**/*.aux
+paper_patchtst_dgm/**/*.bbl
+paper_patchtst_dgm/**/*.blg
+paper_patchtst_dgm/**/*.out
+paper_patchtst_dgm/**/*.synctex.gz
+paper_patchtst_dgm/**/*.pdf
+*.tmp
+*.bak
+
+# Large result files (keep structure, exclude large binaries)
+*.pt
+*.pth
+*.safetensors
+*.bin
+
+# Exception: Include encoder_baseline_dgm safetensors
+!models/encoder_baseline_dgm/*.safetensors
+!models/encoder_baseline_dgm/adapter_model.safetensors
+
+% old logs
+0_LogBAK
+
+% source data, private data, and large raw data
+data
+
+% old framework experiments
+dgm_exp
+
+% writing paper files
+paper_patchtst_dgm

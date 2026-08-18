@@ -1,0 +1,10 @@
+# DGM Trajectory Analysis Requirements
+# Install with: pip install -r requirements_analysis.txt
+
+numpy>=1.24.0
+scipy>=1.10.0
+scikit-learn>=1.2.0
+umap-learn>=0.5.3
+hdbscan>=0.8.29
+matplotlib>=3.7.0
+pandas>=1.5.0
