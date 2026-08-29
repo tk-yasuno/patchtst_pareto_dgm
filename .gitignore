@@ -31,10 +31,20 @@ dgm_exp/results/
 
 # Checkpoints and Models
 0_LogBAK/v4-1-3_tst/checkpoints/
+
+# Exclude all models except v021H_checkpoints
+models/*
+!models/v021H_checkpoints/
+
 *.pt
 *.pth
 *.ckpt
 *.bin
+
+# Exception: Include v021H_checkpoints model files
+!models/v021H_checkpoints/**/*.pt
+!models/v021H_checkpoints/**/*.pth
+!models/v021H_checkpoints/**/*.json
 
 # IDE
 .vscode/
@@ -86,3 +96,21 @@ dgm_exp
 
 % writing paper files
 paper_patchtst_dgm
+
+# Code versions - only include v021H
+ptst_dgm/
+ptst_dgm_v020R/
+ptst_dgm_v021/
+ptst_dgm_v021C/
+ptst_dgm_v021C5/
+ptst_dgm_v021H6D/
+ptst_dgm_v021Hen/
+ptst_dgm_v021HenPlus/
+ptst_dgm_v022/
+ptst_dgm_v023/
+ptst_dgm_v0362/
+ptst_dgm_v0363/
+
+# Include only v021H
+!ptst_dgm_v021H/
+!ptst_dgm_v021H/**
