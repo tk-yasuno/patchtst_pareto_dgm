@@ -1,8 +1,8 @@
 # Multi-Objective DGM: PatchTST Time-Series Anomaly Detector
 
-**Version:** 0.3.7  
+**Version:** 0.2.1H  
 **License:** MIT  
-**Date:** 2026-08-20
+**Date:** 2026-08-29
 
 ---
 
