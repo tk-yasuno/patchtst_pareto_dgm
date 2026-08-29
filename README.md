@@ -737,4 +737,4 @@ SOFTWARE.
 For questions or collaboration inquiries, please open an issue on the repository.
 
 **Maintainer:** Takato Yasuno  
-**Project Homepage:** [GitHub Repository URL TBD]
+**Project Homepage:** https://github.com/tk-yasuno/patchtst_pareto_dgm.git
