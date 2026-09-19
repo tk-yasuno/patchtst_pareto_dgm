@@ -1,0 +1,253 @@
+\begin{thebibliography}{10}
+
+\bibitem{mlit2023bridge}
+{Ministry of Land, Infrastructure, Transport and Tourism}.
+\newblock Bridge inspection and maintenance guidelines.
+\newblock \url{https://www.mlit.go.jp}, 2023.
+
+\bibitem{nie2023patchtst}
+Yuqi Nie, Nam H.~Nguyen, Phanwadee Sinthong, and Jayant Kalagnanam.
+\newblock A time series is worth 64 words: Long-term forecasting with
+  transformers.
+\newblock {\em arXiv preprint arXiv:2211.14730}, 2023.
+
+\bibitem{dosovitskiy2020vit}
+Alexey Dosovitskiy et~al.
+\newblock An image is worth 16x16 words: Transformers for image recognition at
+  scale.
+\newblock In {\em ICLR}, 2021.
+
+\bibitem{hu2022lora}
+Edward~J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean
+  Wang, Lu~Wang, and Weizhu Chen.
+\newblock {LoRA}: Low-rank adaptation of large language models.
+\newblock {\em arXiv preprint arXiv:2106.09685}, 2022.
+
+\bibitem{lin2017focal}
+Tsung-Yi Lin, Priya Goyal, Ross Girshick, Kaiming He, and Piotr Doll{\'a}r.
+\newblock Focal loss for dense object detection.
+\newblock In {\em Proceedings of the IEEE International Conference on Computer
+  Vision (ICCV)}, pages 2980--2988, 2017.
+
+\bibitem{liu2025dgm}
+Jenny Liu et~al.
+\newblock Darwin-g{\"o}del machine: Open-ended evolution of self-improving
+  agents.
+\newblock {\em arXiv preprint arXiv:2505.22954}, 2025.
+
+\bibitem{yasuno2026dgm}
+Takato Yasuno.
+\newblock Pareto {DGM}: Agentic fine-tuning damage cause encoder with
+  imbalanced class weights using darwin-g{\"o}del machines.
+\newblock {\em arXiv preprint}, 2026.
+
+\bibitem{ansari2024chronos}
+Abdul~Fatir Ansari, Lorenzo Stella, Caner Turkmen, Xiyuan Zhang, Pedro
+  de~Sturler, Josif Live, et~al.
+\newblock Chronos: Learning the language of time series.
+\newblock {\em arXiv preprint arXiv:2403.07815}, 2024.
+
+\bibitem{das2024timesfm}
+Abhimanyu Das, Weihao Kong, Andrew Leach, Shaan Mathur, Rajat Sen, and Rose Yu.
+\newblock A decoder-only foundation model for time-series forecasting.
+\newblock {\em arXiv preprint arXiv:2310.10688}, 2024.
+
+\bibitem{vaswani2017attention}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
+  Aidan~N. Gomez, {\L}ukasz Kaiser, and Illia Polosukhin.
+\newblock Attention is all you need.
+\newblock In {\em Advances in Neural Information Processing Systems (NeurIPS)},
+  volume~30, 2017.
+
+\bibitem{zhou2021informer}
+Haoyi Zhou, Shanghang Zhang, Jieqi Peng, Shuai Zhang, Jianxin Li, Hui Xiong,
+  and Wancai Zhang.
+\newblock Informer: Beyond efficient transformer for long sequence time-series
+  forecasting.
+\newblock In {\em Proceedings of AAAI Conference on Artificial Intelligence},
+  volume~35, pages 11106--11115, 2021.
+
+\bibitem{jeong2023anomalybert}
+Yungi Jeong, Eunseok Yang, Jung~Hyun Ryu, Imseong Park, and Myungjoo Choi.
+\newblock {AnomalyBERT}: Self-supervised transformer for time series anomaly
+  detection using data degradation scheme.
+\newblock In {\em ICLR 2023 Workshop on Time Series Representation Learning},
+  2023.
+
+\bibitem{xu2022anomaly}
+Jiehui Xu, Haixu Wu, Jianmin Wang, and Mingsheng Long.
+\newblock Anomaly transformer: Time series anomaly detection with association
+  discrepancy.
+\newblock In {\em International Conference on Learning Representations (ICLR)},
+  2022.
+
+\bibitem{su2019omni}
+Ya~Su, Youjian Zhao, Chenhao Niu, Rong Liu, Wei Sun, and Dan Pei.
+\newblock Robust anomaly detection for multivariate time series through
+  stochastic recurrent neural network.
+\newblock In {\em Proceedings of the 25th ACM SIGKDD International Conference
+  on Knowledge Discovery and Data Mining}, pages 2828--2837, 2019.
+
+\bibitem{audibert2020usad}
+Julien Audibert, Pietro Michiardi, Fr{\'e}d{\'e}ric Guyard, S{\'e}bastien
+  Marti, and Maria~A. Zuluaga.
+\newblock {USAD}: Unsupervised anomaly detection on multivariate time series.
+\newblock In {\em Proceedings of the 26th ACM SIGKDD International Conference
+  on Knowledge Discovery and Data Mining}, pages 3395--3404, 2020.
+
+\bibitem{tuli2022tranad}
+Shikhar Tuli, Giuliano Casale, and Nicholas~R. Jennings.
+\newblock {TranAD}: Deep transformer networks for anomaly detection in
+  multivariate time series data.
+\newblock {\em Proceedings of the VLDB Endowment}, 15(6):1201--1214, 2022.
+
+\bibitem{chawla2002smote}
+Nitesh~V. Chawla, Kevin~W. Bowyer, Lawrence~O. Hall, and W.~Philip Kegelmeyer.
+\newblock {SMOTE}: Synthetic minority over-sampling technique.
+\newblock {\em Journal of Artificial Intelligence Research}, 16:321--357, 2002.
+
+\bibitem{he2009adasyn}
+Haibo He, Yang Bai, Edwardo~A. Garcia, and Sheng Li.
+\newblock {ADASYN}: Adaptive synthetic sampling approach for imbalanced
+  learning.
+\newblock In {\em Proceedings of the International Joint Conference on Neural
+  Networks (IJCNN)}, pages 1322--1328, 2008.
+
+\bibitem{elsken2019nas}
+Thomas Elsken, Jan~Hendrik Metzen, and Frank Hutter.
+\newblock Neural architecture search: A survey.
+\newblock {\em Journal of Machine Learning Research}, 20(55):1--21, 2019.
+
+\bibitem{deb2002nsga2}
+Kalyanmoy Deb, Amrit Pratap, Sameer Agarwal, and T.~Meyarivan.
+\newblock A fast and elitist multiobjective genetic algorithm: {NSGA-II}.
+\newblock {\em IEEE Transactions on Evolutionary Computation}, 6:182--197,
+  2002.
+
+\bibitem{deb2014nsga3}
+Kalyanmoy Deb and Himanshu Jain.
+\newblock An evolutionary many-objective optimization algorithm using
+  reference-point-based nondominated sorting approach, part {I}: Solving
+  problems with box constraints.
+\newblock {\em IEEE Transactions on Evolutionary Computation}, 18(4):577--601,
+  2014.
+
+\bibitem{zitzler2001spea2}
+Eckart Zitzler, Marco Laumanns, and Lothar Thiele.
+\newblock {SPEA2}: Improving the strength pareto evolutionary algorithm.
+\newblock In {\em Proceedings of EUROGEN 2001}, pages 95--100, 2001.
+
+\bibitem{zitzler2003hypervolume}
+Eckart Zitzler, Lothar Thiele, Marco Laumanns, Carlos~M. Fonseca, and
+  Viviane~Grunert da~Fonseca.
+\newblock Performance assessment of multiobjective optimizers: An analysis and
+  review.
+\newblock {\em IEEE Transactions on Evolutionary Computation}, 7:117--132,
+  2003.
+
+\bibitem{akiba2019optuna}
+Takuya Akiba, Shotaro Sano, Toshihiko Yanase, Tomohiko Ohta, and Masanori
+  Koyama.
+\newblock Optuna: A next-generation hyperparameter optimization framework.
+\newblock In {\em Proceedings of the 25th ACM SIGKDD International Conference
+  on Knowledge Discovery and Data Mining}, pages 2623--2631, 2019.
+
+\bibitem{li2017hyperband}
+Lisha Li, Kevin Jamieson, Giulia DeSalvo, Afshin Rostamizadeh, and Ameet
+  Talwalkar.
+\newblock Hyperband: A novel bandit-based approach to hyperparameter
+  optimization.
+\newblock {\em Journal of Machine Learning Research}, 18(185):1--52, 2017.
+
+\bibitem{falkner2018bohb}
+Stefan Falkner, Aaron Klein, and Frank Hutter.
+\newblock {BOHB}: Robust and efficient hyperparameter optimization at scale.
+\newblock In {\em Proceedings of the 35th International Conference on Machine
+  Learning (ICML)}, pages 1437--1446, 2018.
+
+\bibitem{bergstra2011algorithms}
+James Bergstra, R{\'e}mi Bardenet, Yoshua Bengio, and Bal{\'a}zs K{\'e}gl.
+\newblock Algorithms for hyper-parameter optimization.
+\newblock {\em Advances in Neural Information Processing Systems (NeurIPS)},
+  24, 2011.
+
+\bibitem{romera2023funsearch}
+Bernardino Romera-Paredes, Mohammadamin Barekatain, Alexander Novikov, Matej
+  Balog, M.~Pawan Kumar, Emilien Dupont, Francisco J.~R. Ruiz, Jordan~S.
+  Ellenberg, Pengming Wang, Omar Fawzi, Pushmeet Kohli, and Alhussein Fawzi.
+\newblock Mathematical discoveries from program search with large language
+  models.
+\newblock {\em Nature}, 625:468--475, 2024.
+
+\bibitem{shinn2024reflexion}
+Noah Shinn, Federico Cassano, Edward Berman, Ashwin Gopinath, Karthik
+  Narasimhan, and Shunyu Yao.
+\newblock Reflexion: Language agents with verbal reinforcement learning.
+\newblock {\em Advances in Neural Information Processing Systems}, 36, 2024.
+
+\bibitem{yao2023react}
+Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan,
+  and Yuan Cao.
+\newblock {ReAct}: Synergizing reasoning and acting in language models.
+\newblock {\em arXiv preprint arXiv:2210.03629}, 2023.
+
+\bibitem{zhao2024expel}
+Andrew Zhao et~al.
+\newblock Expel: Llm agents are experiential learners.
+\newblock In {\em Proceedings of the AAAI Conference on Artificial
+  Intelligence}, 2024.
+
+\bibitem{fernando2023promptbreeder}
+Chrisantha Fernando, Dylan Banarse, Henryk Michalewski, Simon Osindero, and Tim
+  Rockt{\"a}schel.
+\newblock Promptbreeder: Self-referential self-improvement via prompt
+  evolution.
+\newblock {\em arXiv preprint arXiv:2309.16797}, 2023.
+
+\bibitem{yang2024opro}
+Chengrun Yang et~al.
+\newblock Large language models as optimizers.
+\newblock In {\em ICLR}, 2024.
+
+\bibitem{hu2024adas}
+Shengran Hu, Cong Lu, and Jeff Clune.
+\newblock {ADAS}: Automated design of agentic systems.
+\newblock {\em arXiv preprint arXiv:2408.08435}, 2024.
+
+\bibitem{lu2024ai}
+Chris Lu, Cong Lu, Robert~Tjarko Lange, Jakob Foerster, Jeff Clune, and David
+  Ha.
+\newblock {AI} scientist: Towards fully automated open-ended scientific
+  discovery.
+\newblock {\em arXiv preprint arXiv:2408.06292}, 2024.
+
+\bibitem{zelikman2024quiet}
+Eric Zelikman, Georges Harik, Yijia Shao, Varuna Jayasiri, Nick Haber, and
+  Noah~D. Goodman.
+\newblock Quiet-{STaR}: Language models can teach themselves to think before
+  speaking.
+\newblock {\em arXiv preprint arXiv:2403.09629}, 2024.
+
+\bibitem{nie2025llm}
+Feifan Nie et~al.
+\newblock {LLM}-guided evolutionary multi-objective optimization.
+\newblock {\em arXiv preprint arXiv:2501.09726}, 2025.
+
+\bibitem{chen2024agentless}
+Chunqiu~Steven Xia, Yinlin Deng, Soren Dunn, and Lingming Zhang.
+\newblock Agentless: Demystifying {LLM}-based software engineering agents.
+\newblock In {\em arXiv preprint arXiv:2407.01489}, 2024.
+
+\bibitem{schmidhuber2003goedel}
+J{\"u}rgen Schmidhuber.
+\newblock G{\"o}del machines: Fully self-referential optimal universal
+  self-improvers.
+\newblock {\em arXiv preprint cs/0309048}, 2003.
+
+\bibitem{ma2024eureka}
+Yecheng~Jason Ma, William Liang, Guanzhi Wang, De-An Huang, Osbert Bastani,
+  Dinesh Jayaraman, Yuke Zhu, Linxi Fan, and Anima Anandkumar.
+\newblock Eureka: Human-level reward design via coding large language models.
+\newblock In {\em ICLR}, 2024.
+
+\end{thebibliography}
